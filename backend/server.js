@@ -1,11 +1,11 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-
+const foodRouter = require("./routes/foodRoute.js");
 
 //app config
 const app = express();
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 
 //middleware
 app.use(express.json());
@@ -13,6 +13,10 @@ app.use(cors());
 
 //db Connection
 const db = require("./config/db.js");
+
+// api endpoints
+app.use("/api/food", foodRouter)
+app.use('/images', express.static('uploads'))
 
 app.get("/", (req, res) => {
   res.send("api working");
