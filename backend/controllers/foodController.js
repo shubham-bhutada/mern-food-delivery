@@ -51,19 +51,30 @@ const listFood = async (req, res) => {
 //remove food item
 const removeFood = async (req, res) => {
   try {
-    const food = await foodModel.findById(req.body.id);
-    fs.unlink(`uploads/${food.image}`, () => {});
+    // Use req.params.id instead of req.body.id
+    const food = await foodModel.findById(req.params.id);
+    if (!food) {
+      return res.status(404).json({
+        success: false,
+        message: "Food not found",
+      });
+    }
 
-    await foodModel.findByIdAndDelete(req.body.id);
+    // Remove the image file associated with the food item
+    fs.unlink(`uploads/${food.image}`, (err) => {
+      if (err) console.log("Error deleting file:", err);
+    });
+
+    await foodModel.findByIdAndDelete(req.params.id);
     return res.json({
       success: true,
       message: "Food Removed",
     });
   } catch (error) {
     console.log(error);
-    res.json({
+    res.status(500).json({
       success: false,
-      message: "Error",
+      message: "Internal Server Error",
     });
   }
 };
