@@ -5,8 +5,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
 
-const List = () => {
-  const url = "http://localhost:4000";
+const List = ({ url }) => {
   const [list, setList] = useState([]);
 
   const fetchList = async () => {
@@ -21,7 +20,6 @@ const List = () => {
   const removeFood = async (foodId) => {
     try {
       const response = await axios.delete(`${url}/api/food/remove/${foodId}`);
-      console.log(response.data);
       if (response.data.success) {
         toast.success("Food item removed successfully!");
       } else {
@@ -37,7 +35,7 @@ const List = () => {
   useEffect(() => {
     fetchList();
   }, []);
-  
+
   return (
     <div className="list add flex-col">
       <p>All Foods list</p>
