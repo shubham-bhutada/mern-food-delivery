@@ -19,7 +19,7 @@ const addToCart = async (req, res) => {
     console.log(error);
     res.json({
       success: false,
-      message: "Error",
+      message: "Internal Server Error",
     });
   }
 };
@@ -41,12 +41,27 @@ const removeFromCart = async (req, res) => {
     console.log(error);
     res.json({
       success: false,
-      message: "Error",
+      message: "Internal Server Error",
     });
   }
 };
 
 //fetch user cart data
-const getCart = async (req, res) => {};
+const getCart = async (req, res) => {
+    try {
+        let userData = await userModel.findById(req.body.userId);
+        let cartData = await userData.cartData;
+        res.json({
+            success: true,
+            cartData
+        })
+    } catch (error) {
+        console.log(error);
+        res.json({
+            success: false,
+            message: "Internal Server Error"
+        })
+    }
+};
 
 module.exports = { addToCart, removeFromCart, getCart };
